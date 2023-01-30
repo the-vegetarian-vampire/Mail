@@ -2,7 +2,7 @@
 {% load static %}
 
 {% block body %}
-    <h2>{{ request.user.email }}</h2>
+    <h2 style="margin-top: 10px;">{{ request.user.email }}</h2>
 
     <button class="btn btn-sm btn-outline-primary" id="inbox">Inbox</button>
     <button class="btn btn-sm btn-outline-primary" id="compose">Compose</button>
@@ -12,6 +12,9 @@
     <hr>
 
     <div id="emails-view">
+    </div>
+
+    <div id="email-detail-view">
     </div>
 
     <div id="compose-view">
