@@ -2,7 +2,7 @@
 {% load static %}
 
 {% block body %}
-    <h2 style="margin-top: 10px;">{{ request.user.email }}</h2>
+    <h2 style="margin-top: 15px;">{{ request.user.email }}</h2>
 
     <button class="btn btn-sm btn-outline-primary" id="inbox">Inbox</button>
     <button class="btn btn-sm btn-outline-primary" id="compose">Compose</button>
@@ -11,10 +11,14 @@
     <a class="btn btn-sm btn-outline-primary" href="{% url 'logout' %}">Log Out</a>
     <hr>
 
+    <div id="message">
+        <h6 id="results" class="text-centered"></h6>
+    </div>
+
     <div id="emails-view">
     </div>
 
-    <div id="email-detail-view">
+    <div id="email-view">    
     </div>
 
     <div id="compose-view">

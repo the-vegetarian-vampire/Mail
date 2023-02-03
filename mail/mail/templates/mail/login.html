@@ -5,23 +5,25 @@
     <h2 class="text-center" style="margin-top: 10px;">Login</h2>
 
     {% if message %}
-        <div>{{ message }}</div>
+        <div class="text-center" style="margin-bottom: 10px;">{{ message }}</div>
     {% endif %}
 
-    <form action="{% url 'login' %}" method="post">
-        {% csrf_token %}
-        <div class="form-group">
-            <input autofocus class="form-control" type="email" name="email" placeholder="Email">
-        </div>
-        <div class="form-group">
-            <input class="form-control" type="password" name="password" placeholder="Password">
-        </div>
-        <div class="text-center" style="margin-top: 10px;">
-        <input class="btn btn-primary" type="submit" value="Login">
-        </div>
-    </form>
-    <div class="text-center" style="margin-top: 10px;">
-    Don't have an account? <a href="{% url 'register' %}">Register here.</a>
+    <div class="row justify-content-center">
+        <form action="{% url 'login' %}" method="post">
+            {% csrf_token %}
+            <div class="form-group">
+                <input autofocus class="form-control" type="email" name="email" placeholder="Email">
+            </div>
+            <div class="form-group">
+                <input class="form-control" type="password" name="password" placeholder="Password">
+            </div>
+            <div class="text-center" style="margin-top: 10px;">
+            <input class="btn btn-primary" type="submit" value="Login">
+            </div>
+        </form>
     </div>
+        <div class="text-center" style="margin-top: 10px;">
+        Don't have an account? <a href="{% url 'register' %}">Register here.</a>
+        </div>
 
 {% endblock %}
