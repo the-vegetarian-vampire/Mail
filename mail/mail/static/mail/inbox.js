@@ -38,10 +38,9 @@ function compose_email(event, recipients="", subject="", body="") {
   document.querySelector('#compose-recipients').value = recipients;
   document.querySelector('#compose-subject').value = subject;
   document.querySelector('#compose-body').value = body;
-  if (body.length > 0) {
-    document.querySelector('#compose-body').focus();
-  } else {
-    document.querySelector('#compose-recipients').focus();
+  if (focus) {
+    $("#compose-body").focus();
+    $("#compose-body").get(0).setSelectionRange(0, 0);
   }
 }
 
@@ -140,19 +139,52 @@ function loadEmail(email, mailbox) {
     const replyButton = document.createElement('button');
     replyButton.type = 'button';
     replyButton.innerHTML = `
-    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="25" fill="currentColor" class="bi bi-reply" viewBox="0 0 16 16" style="margin-bottom: 5px;">
+    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="20" fill="currentColor" class="bi bi-reply" viewBox="0 0 16 16" style="margin-bottom: 5px;">
     <path d="M6.598 5.013a.144.144 0 0 1 .202.134V6.3a.5.5 0 0 0 .5.5c.667 0 2.013.005 3.3.822.984.624 1.99 1.76 2.595 3.876-1.02-.983-2.185-1.516-3.205-1.799a8.74 8.74 0 0 0-1.921-.306 7.404 7.404 0 0 0-.798.008h-.013l-.005.001h-.001L7.3 9.9l-.05-.498a.5.5 0 0 0-.45.498v1.153c0 .108-.11.176-.202.134L2.614 8.254a.503.503 0 0 0-.042-.028.147.147 0 0 1 0-.252.499.499 0 0 0 .042-.028l3.984-2.933zM7.8 10.386c.068 0 .143.003.223.006.434.02 1.034.086 1.7.271 1.326.368 2.896 1.202 3.94 3.08a.5.5 0 0 0 .933-.305c-.464-3.71-1.886-5.662-3.46-6.66-1.245-.79-2.527-.942-3.336-.971v-.66a1.144 1.144 0 0 0-1.767-.96l-3.994 2.94a1.147 1.147 0 0 0 0 1.946l3.994 2.94a1.144 1.144 0 0 0 1.767-.96v-.667z"/>
     </svg> Reply`;
-    replyButton.className = 'btn btn-outline-primary btn-sm mr-1';
+    replyButton.className = 'btn btn-outline-primary btn-sm mr-2';
     buttons_div.appendChild(replyButton);
-    
-    // Takes user to compose form
-    replyButton.onclick = () => {
-      compose_email(recipient, subject, body)
-    }
 
+    // Reply button functionality
+    replyButton.addEventListener('click', function(event) {
+      let subject = email.subject
+      if (!email.subject.startsWith("Re: ")) {
+        subject = `Re: ${subject}`
+      }
+      let body = `\n\n\n -------------------------------------------- \n>>On ${email.timestamp} <${email.sender}> wrote:\n${email.body}\n`
+      let recipient = email.sender;
+       // Takes user to compose form
+      compose_email(event, recipient, subject, body)
+  });   
+
+    // Archive button
+    const archive_Button = document.createElement('button');
+    var buttonText = (email.archived == false) ? "Archive" : "Unarchive";
+    archive_Button.type = 'button';
+    archive_Button.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="20" height="25" fill="currentColor" class="bi bi-archive-fill" viewBox="0 0 16 16">
+    <path d="M12.643 15C13.979 15 15 13.845 15 12.5V5H1v7.5C1 13.845 2.021 15 3.357 15h9.286zM5.5 7h5a.5.5 0 0 1 0 1h-5a.5.5 0 0 1 0-1zM.8 1a.8.8 0 0 0-.8.8V3a.8.8 0 0 0 .8.8h14.4A.8.8 0 0 0 16 3V1.8a.8.8 0 0 0-.8-.8H.8z"/>
+  </svg> &nbsp;` + buttonText;
+    archive_Button.className = 'btn btn-outline-warning btn-sm mr-2'
+    buttons_div.appendChild(archive_Button);
+    
+    // Archive or unarchive button functionality
+    archive_Button.onclick = () => {
+      archiveEmail(email);
+    } 
 }
 }
+async function archiveEmail(email) {
+  // Waits for status of "archived" of email to be updated
+  await fetch(`/emails/${email.id}`, {
+    method: 'PUT',
+    body: JSON.stringify({
+      archived: !email.archived
+    })
+  })
+  // Returns inbox
+  return load_mailbox('inbox');
+}
+
 function send_email(recipients, subject, body) {
   fetch('/emails', {
     method: 'POST',
@@ -171,6 +203,8 @@ function send_email(recipients, subject, body) {
     display_messages(result);
   })
   .catch(error => console.log(error))
-}
-  // loads sent emails after 'sent'
+
+  // Adding this function below would load 'sent emails' after submitting.
   // load_mailbox('sent');
+
+}
