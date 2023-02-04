@@ -2,10 +2,12 @@ textarea {
     min-height: 400px;
 }
 
-
-#results {
-    font-size: 1.5rem;
-    border: 1px solid rgba(0, 0, 0, 0.5);
-    border-radius: 15px;
-    padding: 5px 10px;
+.email {
+    border: 1.8px solid black;
+    font-size: .9rem;
+    padding: 10px 10px;
+    padding-left: 25px;
+    margin: 20px;
+    overflow: hidden;
+    border-radius: 5px;
 }
