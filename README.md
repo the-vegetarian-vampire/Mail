@@ -19,7 +19,7 @@ Additionally there is a `read/unread` button in the left of the div to switch th
 <img width="1198" alt="Screen Shot 2023-02-06 at 4 05 57 PM" src="https://user-images.githubusercontent.com/105305546/217088887-47c5265f-aba1-42aa-ae53-70042da2a672.png">
 
 ### Compose
-Users can `Compose` a new email; their specific email address already being populated.
+Users can `Compose` a new email; their specific email address already being populated. If the email is in the database, `Sent` will appear at the top and fade, if the email does not exist, the user is prompted: "the user '[insert@email]' does not exist".
 
 <img width="1194" alt="Screen Shot 2023-02-06 at 4 06 12 PM" src="https://user-images.githubusercontent.com/105305546/217089017-2ee73350-d0cb-4e20-860d-fc3a81677eb3.png">
 
