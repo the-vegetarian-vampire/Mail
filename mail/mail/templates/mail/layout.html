@@ -6,10 +6,28 @@
         <title>{% block title %}CS50w Mail{% endblock %}</title>
         <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
         <link rel="stylesheet" href="{% static 'mail/styles.css' %}">
-          
-             
         <!-- Favicon -->
         <link rel="icon" type="image/png" sizes="16x16" href="{% static 'mail/images/mail-1.png' %}">
+
+        <!-- Navbar -->
+        <div class="navbar navbar-expand-lg navbar-light" style="padding: 14px 34px">
+            <a class="navbar-brand" href="{% url 'index' %}" style="color: black;">
+                <!-- image -->
+                <img src="{% static 'mail/images/icons8-gmail-150.png' %}" height="35px" class="d-inline-block align-top">
+                <a style="margin-top: 2px; font-size: 18px;">Mail</a>
+            </a>
+            {% if request.user.is_authenticated %}
+            <!-- User email name -->
+            <div class="collapse navbar-collapse" id="responsiveDropdown">
+                <ul class="navbar-nav mr-auto">
+                </ul>
+                <div class="nav-link" style="color: #3c4043; font-size: 20px;">{{ request.user.email }}</div>
+                <a class="white-btn btn btn-sm btn-outline-dark" href="{% url 'logout' %}" style="font-size: 18px;">Log Out</a>
+            </div>
+    {% endif %}
+        
+        </div>
+           
 
         <!-- JQuery -->
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
