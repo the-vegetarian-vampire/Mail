@@ -4,7 +4,7 @@ Project 3 for Harvard's CS50w Web Programming with Python and JavaScript.
 📹 `Youtube:` -- tbd
 
 ### Overview:
-A front-end for an email client that makes API calls to send and receive emails.
+A single page front-end for an email client that makes API calls to send and receive emails.
 
 ### Specifications:
 Built with `Javascript`, `Python`, `Django`, `HTML/CSS`, and `SQLite`.
