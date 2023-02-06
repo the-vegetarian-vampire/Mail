@@ -1,3 +1,12 @@
+const unReadIcon = `<svg xmlns="http://www.w3.org/2000/svg" width="9" height="9" fill="currentColor" class="bi bi-envelope-open-fill" viewBox="0 0 16 16">
+<path d="M8.941.435a2 2 0 0 0-1.882 0l-6 3.2A2 2 0 0 0 0 5.4v.314l6.709 3.932L8 8.928l1.291.718L16 5.714V5.4a2 2 0 0 0-1.059-1.765l-6-3.2ZM16 6.873l-5.693 3.337L16 13.372v-6.5Zm-.059 7.611L8 10.072.059 14.484A2 2 0 0 0 2 16h12a2 2 0 0 0 1.941-1.516ZM0 13.373l5.693-3.163L0 6.873v6.5Z"/>
+</svg>
+<!--<span class="visually-hidden">Unread</span>-->`;
+const readIcon = `<svg xmlns="http://www.w3.org/2000/svg" width="9" height="9" fill="currentColor" class="bi bi-envelope" viewBox="0 0 16 16">
+<path d="M0 4a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V4Zm2-1a1 1 0 0 0-1 1v.217l7 4.2 7-4.2V4a1 1 0 0 0-1-1H2Zm13 2.383-4.708 2.825L15 11.105V5.383Zm-.034 6.876-5.64-3.471L8 9.583l-1.326-.795-5.64 3.47A1 1 0 0 0 2 13h12a1 1 0 0 0 .966-.741ZM1 11.105l4.708-2.897L1 5.383v5.722Z"/>
+</svg>
+<!--<span class="visually-hidden">Read</span>-->`;
+
 document.addEventListener('DOMContentLoaded', function() {
 
   // Use buttons to toggle between views
@@ -69,17 +78,22 @@ function load_mailbox(mailbox) {
     // create new element
       emails.forEach(email => {
           const div_element = document.createElement("div");
-          div_element.className = 'row border right border left border bottom border top' 
-          div_element.innerHTML = `
-          &nbsp;
-          <span style="padding: 4px;"> <svg xmlns="http://www.w3.org/2000/svg" width="11" height="11" fill="currentColor" class="bi bi-square" viewBox="0 0 16 16">
-          <path d="M14 1a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1h12zM2 0a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2H2z"/>
-          </svg> </span> &nbsp; &nbsp;
-          <span style="width: 240px; display: inline-block; margin-top: 5px;">${email.sender}</span>
-          <span style="width: 290px; text-align: center; font; margin-top: 5px;">${email.subject}</span> 
-          <span style="width: 560px; text-align: right; font; margin-top: 5px;">${email.timestamp}</span>
-          `
-
+          
+          div_element.className = 'email' 
+          div_element.innerHTML = ` &nbsp &nbsp;
+          <span style="width: 350px; display: inline-block">${email.sender}</span>
+          <span style="">${email.subject}</span> &nbsp &nbsp
+          <span style="float: right; margin-right: 4px">${email.timestamp}</span>`
+          
+          // /*
+          // Add read/unread icons
+          const read_icons = document.createElement('button');
+          read_icons.className = "btn btn-outline-dark btn-xs float-left";
+          read_icons.innerHTML = !email.read ? readIcon:unReadIcon;
+          div_element.appendChild(read_icons);
+          read_icons.addEventListener('click', () => email_read(email.id, !email.read) );
+          //*/
+         
           // display contents of clicked email
           div_element.addEventListener('click', function() {
           fetch(`/emails/${email.id}`)
@@ -203,8 +217,21 @@ function send_email(recipients, subject, body) {
     display_messages(result);
   })
   .catch(error => console.log(error))
+  
 
   // Adding this function below would load 'sent emails' after submitting.
   // load_mailbox('sent');
 
+}
+
+function email_read(id, status){
+  fetch('/emails/' + id, {
+    method: 'PUT',
+    body: JSON.stringify({ read : status })
+  });
+  // Reloads if read -> unread
+  if (!status){ 
+    load_mailbox('inbox');
+    window.location.reload();
+  }
 }

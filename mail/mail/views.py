@@ -5,6 +5,7 @@ from django.db import IntegrityError
 from django.http import JsonResponse
 from django.shortcuts import HttpResponse, HttpResponseRedirect, render
 from django.urls import reverse
+from django.contrib import messages 
 from django.views.decorators.csrf import csrf_exempt
 
 from .models import User, Email
@@ -44,8 +45,9 @@ def compose(request):
             user = User.objects.get(email=email)
             recipients.append(user)
         except User.DoesNotExist:
+            messages.error(request, f"User with email \"{email}\" does not exist.")
             return JsonResponse({
-                "error": f"User with email \"{email}\" does not exist."
+                "error": f"User email \"{email}\" does not exist."
             }, status=400)
 
     # Get contents of email
@@ -68,8 +70,7 @@ def compose(request):
         for recipient in recipients:
             email.recipients.add(recipient)
         email.save()
-
-    return JsonResponse({"message": "Email sent successfully."}, status=201)
+    return JsonResponse({"message": "Email sent."}, status=201)
 
 
 @login_required

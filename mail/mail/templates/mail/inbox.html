@@ -12,7 +12,13 @@
     <hr>
 
     <div id="message">
-        <h6 id="results" style="font-size: 1.2rem; padding: 5px 10px; text-align: center;"></h6>
+        <h6 id="results" style="font-size: 1.4rem; padding: 5px 10px; text-align: center;"></h6>
+        <!--  if running message through Python view.py
+        {% if messages %}
+        {% for message in messages %}
+        <ul class="alert {{ message.tags }}" role="alert" style="text-align: center;"> {{ message }}</li>
+        {% endfor %}
+        {% endif %} -->
     </div>
 
     <div id="emails-view" style="padding: 7px;">

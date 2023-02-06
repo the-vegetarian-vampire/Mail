@@ -1,8 +1,9 @@
 {% extends "mail/layout.html" %}
 
 {% block body %}
-
-    <h2 class="text-center" style="margin-top: 10px;">Login</h2>
+<div class="card mx-auto" style="width: 400px; margin-top: 75px">
+    <div class="card-body">
+    <h2 class="text-center" style="margin-top: 10px; margin-bottom: 20px;">Login</h2>
 
     {% if message %}
         <div class="text-center" style="margin-bottom: 10px;">{{ message }}</div>
@@ -22,8 +23,10 @@
             </div>
         </form>
     </div>
-        <div class="text-center" style="margin-top: 10px;">
+        <div class="text-center" style="margin-top: 15px;">
         Don't have an account? <a href="{% url 'register' %}">Register here.</a>
         </div>
 
+    </div>
+</div>
 {% endblock %}

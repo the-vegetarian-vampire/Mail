@@ -2,12 +2,41 @@ textarea {
     min-height: 400px;
 }
 
-.email {
-    border: 1.8px solid black;
-    font-size: .9rem;
-    padding: 10px 10px;
-    padding-left: 25px;
-    margin: 20px;
-    overflow: hidden;
-    border-radius: 5px;
+.email:hover {
+    cursor: pointer;
+    box-shadow: inset 2px 0 0 #dadce0, inset 0 0 0 #dadce0, 0 2px 4px 0 rgba(60,64,67,.3), 0 0 0 0 rgba(60,64,67,.15);
+
 }
+
+.subject {
+    text-align: center;
+}
+
+.timestamp {
+    float: right;
+    margin-right: 4px;
+    
+}
+
+.envelope {
+    float: inline-end;
+}
+
+.email {
+    line-height: 30px;
+    padding: 7px;
+    padding-left: 5px;
+    overflow: hidden;
+    border-bottom: 1px solid lightgrey;
+    border-top: 1px solid lightgray;
+    border-radius: 2px;
+  }
+
+  .btn-xs {
+    padding: 4px 4px;
+    margin-top: 6px;
+    margin-left: 4px;
+    font-size: 2px;
+    border-radius: 1px;
+
+  }
