@@ -24,7 +24,7 @@ Users can `Compose` a new email; their specific email address already being popu
 <img width="1194" alt="Screen Shot 2023-02-06 at 4 06 12 PM" src="https://user-images.githubusercontent.com/105305546/217089017-2ee73350-d0cb-4e20-860d-fc3a81677eb3.png">
 
 ### Reply
-Users can `Reply` to an email by clicking the reply button; the subject `Re:` with also populate.
+Users can `Reply` to an email by clicking the reply button; the subject `Re:` will populate along with the `body` of the previous email bring replied to.
 
 <img width="1194" alt="Screen Shot 2023-02-06 at 4 09 28 PM" src="https://user-images.githubusercontent.com/105305546/217089159-467aa082-d1c4-4e17-be15-9ae73b2dce62.png">
 
