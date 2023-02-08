@@ -1,7 +1,7 @@
 ## Mail
 Project 3 for Harvard's CS50w Web Programming with Python and JavaScript.
 
-📹 `Youtube:` -- https://www.youtube.com/watch?v=hl1I_ZpIjVg
+📹 `Youtube:` https://www.youtube.com/watch?v=hl1I_ZpIjVg
 
 ### Overview:
 A single page front-end application for an email client that makes API calls to send and receive emails.
