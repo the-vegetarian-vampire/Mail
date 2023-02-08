@@ -7,12 +7,12 @@ Project 3 for Harvard's CS50w Web Programming with Python and JavaScript.
 A single page front-end application for an email client that makes API calls to send and receive emails.
 
 ### Specifications:
-Built with `Javascript`, `Python`, `Django`, `HTML/CSS`, and `SQLite`.
+Built with `Javascript`, `Python`, `Django`, `HTML/CSS`, `Bootstrap`, and `SQLite`.
 
 The website never reloads, meaning it does not request multiple html pages, everything is done via JavaScript to update the DOM.
 
 ### Inbox
-The populated inbox displays all emails: `read` emails are displayed with a dark gray background and `unread` emails are displayed with a white background and bold text.
+The populated inbox displays all emails in the user's inbox: `read` emails are displayed with a dark gray background and `unread` emails are displayed with a white background and bold text.
 
 Additionally there is a `read/unread` button in the left of the div to switch the boolean values.
 
