@@ -11,6 +11,15 @@ Built with `Javascript`, `Python`, `Django`, `HTML/CSS`, `Bootstrap`, and `SQLit
 
 The website never reloads, meaning it does not request multiple html pages, everything is done via JavaScript to update the DOM.
 
+### To Run:
+1. Pip install `Django`
+2. In the terminal, cd into the mail directory.
+3. Run `python3 manage.py makemigrations mail` to make migrations for the mail app.
+4. Run `python3 manage.py migrate` to apply migrations to the database.
+5. Run `python3 manage.py runserver` to start the Django web server and visit the website in the browser.
+
+----
+
 ### Inbox
 The populated inbox displays all emails in the user's inbox: `read` emails are displayed with a dark gray background and `unread` emails are displayed with a white background and bold text.
 
