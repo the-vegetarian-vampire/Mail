@@ -1,7 +1,9 @@
 import json
+import mailbox as MailBox
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.db import IntegrityError
+from django.db import models
 from django.http import JsonResponse
 from django.shortcuts import HttpResponse, HttpResponseRedirect, render
 from django.urls import reverse
@@ -33,6 +35,8 @@ def compose(request):
     # Check recipient emails
     data = json.loads(request.body)
     emails = [email.strip() for email in data.get("recipients").split(",")]
+
+
     if emails == [""]:
         return JsonResponse({
             "error": "At least one recipient required."
@@ -58,6 +62,17 @@ def compose(request):
     users = set()
     users.add(request.user)
     users.update(recipients)
+
+    mbox_file_path = './inbox.mbox' # Replace with the desired path and file name
+    mbox = MailBox.mbox(mbox_file_path)
+    email = MailBox.mboxMessage()
+    email['From'] = User.objects.get(email=email)
+    email['To'] = ", ".join(request.user)
+    email['Subject'] = subject
+    email.set_payload(body)  # Assign the content directly to the mboxMessage object
+    mbox.add(email)
+    mbox.flush()  # Save the mbox file
+
     for user in users:
         email = Email(
             user=user,
@@ -80,7 +95,26 @@ def mailbox(request, mailbox):
     if mailbox == "inbox":
         emails = Email.objects.filter(
             user=request.user, recipients=request.user, archived=False
-        )
+        )  
+        # serialized_emails = [email.serialize() for email in emails]
+        # # raise Exception(JsonResponse(serialized_emails, safe=False))
+
+        # def create_mbox_file(serialized_emails, mbox_file_path):
+        #     mbox = MailBox.mbox(mbox_file_path)
+        #     for email_data in serialized_emails:
+        #         email = MailBox.mboxMessage()
+        #         email['From'] = email_data['sender']
+        #         email['To'] = ", ".join(email_data['recipients'])
+        #         email['Subject'] = email_data['subject']
+        #         email.set_payload(email_data['body'])  # Assign the content directly to the mboxMessage object
+
+        #         mbox.add(email)
+
+        #     mbox.flush()  # Save the mbox file
+
+        # mbox_file_path = './inbox.mbox' # Replace with the desired path and file name
+        # create_mbox_file(serialized_emails, mbox_file_path)
+          
     elif mailbox == "sent":
         emails = Email.objects.filter(
             user=request.user, sender=request.user
