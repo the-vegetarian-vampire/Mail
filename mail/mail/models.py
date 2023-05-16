@@ -18,21 +18,6 @@ class Email(models.Model):
 
     def __str__(self):
         return f"Email sent by {self.sender}; subject {self.subject}"
-    
-    def create_mbox_file(self, mbox_file_path):
-        mbox = MailBox.mbox(mbox_file_path)
-        email = MailBox.mboxMessage()
-        email['From'] = self.sender.email
-        email['To'] = ", ".join(user.email for user in self.recipients.all())
-        email['Subject'] = self.subject
-        email.set_payload(self.body)  # Assign the content directly to the mboxMessage object
-
-        mbox.add(email)
-
-        mbox.flush()  # Save the mbox file
-
-    mbox_file_path = './inbox.mbox' # Replace with the desired path and file name
-    # create_mbox_file(self, mbox_file_path)
 
     def serialize(self):
         return {

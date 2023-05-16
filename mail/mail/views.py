@@ -1,4 +1,6 @@
 import json
+import subprocess
+# import requests as Requests
 import mailbox as MailBox
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
@@ -59,19 +61,23 @@ def compose(request):
     body = data.get("body", "")
 
     # Create one email for each recipient, plus sender
+    mbox_file_path = f'./inbox_{subject}.mbox' 
+    mbox = MailBox.mbox(mbox_file_path)
+    email = MailBox.mboxMessage()
+    email['From'] = request.user.email
+    email['To'] = ", ".join(emails)
+    email['Subject'] = subject
+    email.set_payload(body)  
+    mbox.add(email)
+    mbox.flush()  # Save the mbox file
+
+    # Call ml project
+    # script_path = r"D:\python-Mail\Mail\mail\ml_spam.py"  # Replace with the actual path to your script
+    # subprocess.call(["python", script_path, mbox_file_path])  # Pass mbox_file_path as an argument to the script
+
     users = set()
     users.add(request.user)
     users.update(recipients)
-
-    mbox_file_path = './inbox.mbox' # Replace with the desired path and file name
-    mbox = MailBox.mbox(mbox_file_path)
-    email = MailBox.mboxMessage()
-    email['From'] = User.objects.get(email=email)
-    email['To'] = ", ".join(request.user)
-    email['Subject'] = subject
-    email.set_payload(body)  # Assign the content directly to the mboxMessage object
-    mbox.add(email)
-    mbox.flush()  # Save the mbox file
 
     for user in users:
         email = Email(

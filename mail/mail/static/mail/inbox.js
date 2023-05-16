@@ -13,6 +13,7 @@ document.addEventListener('DOMContentLoaded', function() {
   document.querySelector('#inbox').addEventListener('click', () => load_mailbox('inbox'));
   document.querySelector('#sent').addEventListener('click', () => load_mailbox('sent'));
   document.querySelector('#archived').addEventListener('click', () => load_mailbox('archive'));
+  document.querySelector('#spam').addEventListener('click', () => load_mailbox('spam'));
   document.querySelector('#compose').addEventListener('click', compose_email);
 
   document.querySelector("#compose-form").onsubmit = () => {
