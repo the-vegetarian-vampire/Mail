@@ -81,7 +81,8 @@ def compose(request):
             sender=request.user,
             subject=subject,
             body=body,
-            read=user == request.user
+            read=user == request.user,
+            spam=True
         )
         email.save()
         for recipient in recipients:
@@ -96,7 +97,7 @@ def mailbox(request, mailbox):
     # Filter emails returned based on mailbox
     if mailbox == "inbox":
         emails = Email.objects.filter(
-            user=request.user, recipients=request.user, archived=False
+            user=request.user, recipients=request.user, archived=False , spam=False
         )  
     elif mailbox == "sent":
         emails = Email.objects.filter(
@@ -105,6 +106,10 @@ def mailbox(request, mailbox):
     elif mailbox == "archive":
         emails = Email.objects.filter(
             user=request.user, recipients=request.user, archived=True
+        )
+    elif mailbox == "spam":
+        emails = Email.objects.filter(
+            user=request.user, recipients=request.user, spam=True
         )
     else:
         return JsonResponse({"error": "Invalid mailbox."}, status=400)

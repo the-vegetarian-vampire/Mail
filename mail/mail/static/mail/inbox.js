@@ -14,6 +14,7 @@ document.addEventListener('DOMContentLoaded', function() {
   document.querySelector('#sent').addEventListener('click', () => load_mailbox('sent'));
   document.querySelector('#archived').addEventListener('click', () => load_mailbox('archive'));
   document.querySelector('#compose').addEventListener('click', compose_email);
+  document.querySelector('#spam').addEventListener('click', () => load_mailbox('spam'));
 
   document.querySelector("#compose-form").onsubmit = () => {
     const recipients = document.querySelector("#compose-recipients").value;
