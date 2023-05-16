@@ -30,7 +30,7 @@ class Email(models.Model):
             "timestamp": self.timestamp.strftime("%b %d %Y, %I:%M %p"),
             "read": self.read,
             "archived": self.archived,
-            "spam": self.spam
+            # "spam": self.spam
         }
           
 
