@@ -52,6 +52,7 @@ class Migration(migrations.Migration):
                 ('timestamp', models.DateTimeField(auto_now_add=True)),
                 ('read', models.BooleanField(default=False)),
                 ('archived', models.BooleanField(default=False)),
+                # ('spam', models.BooleanField(default=False)),
                 ('recipients', models.ManyToManyField(related_name='emails_received', to=settings.AUTH_USER_MODEL)),
                 ('sender', models.ForeignKey(on_delete=django.db.models.deletion.PROTECT, related_name='emails_sent', to=settings.AUTH_USER_MODEL)),
                 ('user', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='emails', to=settings.AUTH_USER_MODEL)),

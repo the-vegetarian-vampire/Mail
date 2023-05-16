@@ -71,10 +71,6 @@ def compose(request):
     mbox.add(email)
     mbox.flush()  # Save the mbox file
 
-    # Call ml project
-    # script_path = r"D:\python-Mail\Mail\mail\ml_spam.py"  # Replace with the actual path to your script
-    # subprocess.call(["python", script_path, mbox_file_path])  # Pass mbox_file_path as an argument to the script
-
     users = set()
     users.add(request.user)
     users.update(recipients)
@@ -102,25 +98,6 @@ def mailbox(request, mailbox):
         emails = Email.objects.filter(
             user=request.user, recipients=request.user, archived=False
         )  
-        # serialized_emails = [email.serialize() for email in emails]
-        # # raise Exception(JsonResponse(serialized_emails, safe=False))
-
-        # def create_mbox_file(serialized_emails, mbox_file_path):
-        #     mbox = MailBox.mbox(mbox_file_path)
-        #     for email_data in serialized_emails:
-        #         email = MailBox.mboxMessage()
-        #         email['From'] = email_data['sender']
-        #         email['To'] = ", ".join(email_data['recipients'])
-        #         email['Subject'] = email_data['subject']
-        #         email.set_payload(email_data['body'])  # Assign the content directly to the mboxMessage object
-
-        #         mbox.add(email)
-
-        #     mbox.flush()  # Save the mbox file
-
-        # mbox_file_path = './inbox.mbox' # Replace with the desired path and file name
-        # create_mbox_file(serialized_emails, mbox_file_path)
-          
     elif mailbox == "sent":
         emails = Email.objects.filter(
             user=request.user, sender=request.user
