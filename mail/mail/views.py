@@ -1,6 +1,10 @@
 import json
-import subprocess
-# import requests as Requests
+import os
+
+# import ml file
+# from ml_spam import predict
+
+
 import mailbox as MailBox
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
@@ -71,6 +75,13 @@ def compose(request):
     mbox.add(email)
     mbox.flush()  # Save the mbox file
 
+    # call detect_spam function from machinelearning.py and delete mbox file
+    # try:
+    #     with open(mbox_file_path, 'rb') as mbox_file:
+    #         spam = predict(mbox_file)
+    # finally:
+    # os.remove(mbox_file_path)
+
     users = set()
     users.add(request.user)
     users.update(recipients)
@@ -105,7 +116,7 @@ def mailbox(request, mailbox):
         )
     elif mailbox == "archive":
         emails = Email.objects.filter(
-            user=request.user, recipients=request.user, archived=True
+            user=request.user, recipients=request.user, archived=True , spam=False
         )
     elif mailbox == "spam":
         emails = Email.objects.filter(
