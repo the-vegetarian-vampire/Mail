@@ -122,12 +122,12 @@ function load_mailbox(mailbox) {
           if (email.spam && email.read) {
             div_element.style.backgroundColor = "#bd5e5e"; 
           } else if (email.read) {
-            div_element.style.backgroundColor = "white"; 
+            div_element.style.backgroundColor = "rgba(235,235,235,80%)";
           } else if (email.spam) {
             div_element.style.backgroundColor = 'red'; 
             div_element.classList.add('font-weight-bold');    
           } else {
-            div_element.style.backgroundColor = "rgba(235,235,235,80%)";
+            div_element.style.backgroundColor = "white"; 
             div_element.classList.add('font-weight-bold');
             
           }
