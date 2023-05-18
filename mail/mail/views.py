@@ -1,8 +1,7 @@
 import json
 import os
 
-# import ml file
-# from ml_spam import predict
+from ml_spam import predict
 
 
 import mailbox as MailBox
@@ -76,11 +75,11 @@ def compose(request):
     mbox.flush()  # Save the mbox file
 
     # call detect_spam function from machinelearning.py and delete mbox file
-    # try:
-    #     with open(mbox_file_path, 'rb') as mbox_file:
-    #         spam = predict(mbox_file)
-    # finally:
-    # os.remove(mbox_file_path)
+    try:
+        test_data = MailBox.mbox(mbox_file_path)
+        spam = predict(test_data)
+    finally:
+        os.remove(mbox_file_path)
 
     users = set()
     users.add(request.user)
@@ -93,7 +92,7 @@ def compose(request):
             subject=subject,
             body=body,
             read=user == request.user,
-            spam=True
+            spam=spam
         )
         email.save()
         for recipient in recipients:
