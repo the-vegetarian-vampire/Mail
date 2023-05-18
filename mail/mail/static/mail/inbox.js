@@ -16,14 +16,19 @@ document.addEventListener('DOMContentLoaded', function() {
   document.querySelector('#compose').addEventListener('click', compose_email);
   document.querySelector('#spam').addEventListener('click', () => load_mailbox('spam'));
 
-  document.querySelector("#compose-form").onsubmit = () => {
-    const recipients = document.querySelector("#compose-recipients").value;
-    const subject = document.querySelector("#compose-subject").value;
-    const body = document.querySelector("#compose-body").value;
-    send_email(recipients, subject, body);
-    // Stop form from submitting
-    return false;
-  }
+    document.querySelector("#compose-form").onsubmit = () => {
+      const recipients = document.querySelector("#compose-recipients").value;
+      const subject = document.querySelector("#compose-subject").value;
+      const body = document.querySelector("#compose-body").value;
+      const attachments = document.querySelector("#compose-attachment").value;
+
+      const attachmentFileName = attachments.split('\\').pop(); // Extract the file name
+
+      console.log(attachmentFileName);
+      send_email(recipients, subject, body , attachmentFileName);
+      // Stop form from submitting
+      return false;
+    }
   // By default, load the inbox
   load_mailbox('inbox');
   
@@ -144,6 +149,13 @@ function loadEmail(email, mailbox) {
     <div class="text-nowrap mr-lg-4 ml-0 ml-sm-2" id="buttons">
     </div>
   </div>
+  <div class="d-flex justify-content-between py-3 pt-md-2 border-bottom flex-wrap">
+    <div>
+      <strong>Attachments:</strong> ${email.attachments}
+    </div>
+    <div class="text-nowrap mr-lg-4 ml-0 ml-sm-2" id="buttons">
+    </div>
+  </div>
   <div class="pt-1" style="white-space: pre-line">
     ${email.body}
   </div>`;
@@ -200,13 +212,14 @@ async function archiveEmail(email) {
   return load_mailbox('inbox');
 }
 
-function send_email(recipients, subject, body) {
+function send_email(recipients, subject, body , attachments) {
   fetch('/emails', {
     method: 'POST',
     body: JSON.stringify({
         recipients: recipients,
         subject: subject,
         body: body,
+        attachments: attachments
     })
   })
   .then(response => response.json())

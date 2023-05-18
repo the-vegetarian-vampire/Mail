@@ -12,6 +12,7 @@ class Email(models.Model):
     recipients = models.ManyToManyField("User", related_name="emails_received")
     subject = models.CharField(max_length=255)
     body = models.TextField(blank=True)
+    attachments = models.CharField(blank=True , max_length=255)
     timestamp = models.DateTimeField(auto_now_add=True)
     read = models.BooleanField(default=False)
     archived = models.BooleanField(default=False)
@@ -27,6 +28,7 @@ class Email(models.Model):
             "recipients": [user.email for user in self.recipients.all()],
             "subject": self.subject,
             "body": self.body,
+            "attachments": self.attachments,
             "timestamp": self.timestamp.strftime("%b %d %Y, %I:%M %p"),
             "read": self.read,
             "archived": self.archived,

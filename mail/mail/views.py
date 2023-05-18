@@ -41,7 +41,6 @@ def compose(request):
     data = json.loads(request.body)
     emails = [email.strip() for email in data.get("recipients").split(",")]
 
-
     if emails == [""]:
         return JsonResponse({
             "error": "At least one recipient required."
@@ -62,6 +61,7 @@ def compose(request):
     # Get contents of email
     subject = data.get("subject", "")
     body = data.get("body", "")
+    attachments = data.get("attachments", "")
 
     # Create one email for each recipient, plus sender
     mbox_file_path = f'./inbox_{subject}.mbox' 
@@ -70,6 +70,7 @@ def compose(request):
     email['From'] = request.user.email
     email['To'] = ", ".join(emails)
     email['Subject'] = subject
+    email['Attachments'] = attachments
     email.set_payload(body)  
     mbox.add(email)
     mbox.flush()  # Save the mbox file
@@ -90,6 +91,7 @@ def compose(request):
             user=user,
             sender=request.user,
             subject=subject,
+            attachments=attachments,
             body=body,
             read=user == request.user,
             spam=spam
