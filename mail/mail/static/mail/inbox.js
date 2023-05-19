@@ -15,6 +15,7 @@ document.addEventListener('DOMContentLoaded', function() {
   document.querySelector('#archived').addEventListener('click', () => load_mailbox('archive'));
   document.querySelector('#compose').addEventListener('click', compose_email);
   document.querySelector('#spam').addEventListener('click', () => load_mailbox('spam'));
+  document.querySelector('#analytics').addEventListener('click', () => load_mailbox_analytics('analytics'));
 
     document.querySelector("#compose-form").onsubmit = () => {
       const recipients = document.querySelector("#compose-recipients").value;
@@ -62,7 +63,6 @@ function compose_email(event, recipients="", subject="", body="") {
 function load_mailbox(mailbox) {
   
   $("#message").hide();
-
   // Show the mailbox and hide other views
   document.querySelector('#emails-view').style.display = 'block';
   document.querySelector('#compose-view').style.display = 'none';
@@ -135,6 +135,86 @@ function load_mailbox(mailbox) {
           document.querySelector("#emails-view").append(div_element)
       })
   });
+}
+
+
+function load_mailbox_analytics(mailbox) {
+  
+  $("#message").hide();
+  // Show the mailbox and hide other views
+  document.querySelector('#emails-view').style.display = 'block';
+  document.querySelector('#compose-view').style.display = 'none';
+  document.querySelector('#email-view').style.display = 'none';
+
+  // Show the mailbox name
+  document.querySelector('#emails-view').innerHTML = `<h3>${mailbox.charAt(0).toUpperCase() + mailbox.slice(1)}</h3>`;
+
+  // Query API for emails in mailbox
+  fetch(`/emails/${mailbox}`)
+  .then(response => response.json())
+  .then(response_data => {
+    const { count_emails, count_emails_spam, emails } = response_data;
+    const count_emails_ham = count_emails - count_emails_spam;
+    // Access count_emails and count_emails_spam here
+    console.log(count_emails);
+    console.log(count_emails_spam);
+    const div_element = document.createElement("div");
+    div_element.className = 'email' 
+          div_element.innerHTML = ` &nbsp &nbsp;
+          <span style="width: 350px; display: inline-block">Ham Emails</span>
+          <span style="float: right; margin-right: 4px">${count_emails - count_emails_spam}</span>`
+
+    document.querySelector("#emails-view").append(div_element)
+
+
+    const div_element2 = document.createElement("div");
+    div_element2.className = 'email' 
+          div_element2.innerHTML = ` &nbsp &nbsp;
+          <span style="width: 350px; display: inline-block">Total Spam Emails</span>
+          <span style="float: right; margin-right: 4px">${count_emails_spam}</span>`
+
+    document.querySelector("#emails-view").append(div_element2)
+
+    const spam_precentage = count_emails_spam/count_emails*100;
+
+
+    // Display count_emails and count_emails_spam
+    const div_element3 = document.createElement("div");
+    div_element3.className = 'email' 
+          div_element3.innerHTML = ` &nbsp &nbsp;
+          <span style="width: 350px; display: inline-block">Spam Precentage</span>
+          <span style="float: right; margin-right: 4px">${spam_precentage}</span>`
+
+    div_element3.style.backgroundColor = "yellow"; 
+
+    document.querySelector("#emails-view").append(div_element3)
+    
+
+    // Create the pie chart using Chart.js
+    const pieChartCanvas = document.createElement("canvas");
+    pieChartCanvas.id = 'pie-chart' 
+    new Chart(pieChartCanvas, {
+      type: 'pie',
+      data: {
+        labels: ['Ham Emails', 'Spam Emails'],
+        datasets: [{
+          data: [count_emails_ham, count_emails_spam],
+          backgroundColor: ['green', 'red'],
+        }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+      }
+    });
+    pieChartCanvas.style.maxWidth = "300px"; 
+    pieChartCanvas.style.maxHeight = "300px"; 
+    pieChartCanvas.style.paddingTop = "20px"; 
+
+    document.querySelector("#emails-view").append(pieChartCanvas)
+
+  });
+  
 }
 
 function loadEmail(email, mailbox) {

@@ -123,12 +123,31 @@ def mailbox(request, mailbox):
         emails = Email.objects.filter(
             user=request.user, recipients=request.user, spam=True
         )
+    elif mailbox == "analytics":
+        emails_spam = Email.objects.filter(
+            user=request.user, recipients=request.user, spam=True
+        )
+        emails = Email.objects.filter(
+            user=request.user, recipients=request.user
+        )
+
+        count_emails_spam = emails_spam.count()
+        count_emails = emails.count()
+
+        response_data = {
+        "count_emails_spam": count_emails_spam,
+        "count_emails": count_emails,
+        "emails": [email.serialize() for email in emails]
+        }
+
+        return JsonResponse(response_data, safe=False)
+    
     else:
         return JsonResponse({"error": "Invalid mailbox."}, status=400)
 
     # Return emails in reverse chronologial order
     emails = emails.order_by("-timestamp").all()
-    return JsonResponse([email.serialize() for email in emails], safe=False)
+    return JsonResponse([email.serialize() for email in emails], safe=False )
 
 
 @csrf_exempt
