@@ -1,4 +1,4 @@
-Sets to Follow
+Steps to Follow
 
     1. Set the path of knn.pickle in ml_spam.py file
     2. pip install Django
