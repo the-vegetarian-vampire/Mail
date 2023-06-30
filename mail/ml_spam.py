@@ -1,4 +1,4 @@
-import pickle
+import pickle 
 import pandas as pd
 import mailbox
 import re
@@ -15,7 +15,7 @@ from sklearn.model_selection import train_test_split
 nltk.download('punkt')
 nltk.download('stopwords')
 
-loaded_model = pickle.load(open('/home/zebra/Work/Mail/mail/knn.pickle', "rb"))
+loaded_model = pickle.load(open('knn.pickle', "rb"))
 
 class getEmailFeatures:
     urlRegex = r'https?:\/\/(?:www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b(?:[-a-zA-Z0-9()@:%_\+.~#?&\/=;]*)'

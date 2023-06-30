@@ -319,7 +319,7 @@ function send_email(recipients, subject, body , attachments) {
     load_mailbox("sent");
     display_messages(result);
   })
-  .catch(error => console.log(error))
+  .catch(error => console.log(error));
   
 
   // Adding this function below would load 'sent emails' after submitting.

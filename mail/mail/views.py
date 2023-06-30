@@ -1,5 +1,7 @@
 import json
-import os
+# import os
+import send2trash
+import time
 
 from ml_spam import predict
 
@@ -80,7 +82,9 @@ def compose(request):
         test_data = MailBox.mbox(mbox_file_path)
         spam = predict(test_data)
     finally:
-        os.remove(mbox_file_path)
+        time.sleep(1) 
+        # send2trash.send2trash(mbox_file_path)
+        # os.remove(mbox_file_path)
 
     users = set()
     users.add(request.user)
