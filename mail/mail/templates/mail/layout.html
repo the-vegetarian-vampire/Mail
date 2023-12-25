@@ -3,12 +3,12 @@
 <!DOCTYPE html>
 <html lang="en">
     <head>
-        <title>{% block title %}CS50w Mail{% endblock %}</title>
+        <title>{% block title %}Spam Detection Web Mail{% endblock %}</title>
         <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
         <link rel="stylesheet" href="{% static 'mail/styles.css' %}">
         <!-- Favicon -->
         <link rel="icon" type="image/png" sizes="16x16" href="{% static 'mail/images/mail-1.png' %}">
-
+        <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
         <!-- Navbar -->
         <div class="navbar navbar-expand-lg navbar-light" style="padding: 14px 34px">
             <a class="navbar-brand" href="{% url 'index' %}" style="color: black;">
@@ -31,6 +31,7 @@
 
         <!-- JQuery -->
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+
 
         {% block script %}
         {% endblock %}

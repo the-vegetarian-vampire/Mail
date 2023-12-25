@@ -1,7 +1,16 @@
 import json
+# import os
+import send2trash
+import time
+
+from ml_spam import predict
+
+
+import mailbox as MailBox
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.db import IntegrityError
+from django.db import models
 from django.http import JsonResponse
 from django.shortcuts import HttpResponse, HttpResponseRedirect, render
 from django.urls import reverse
@@ -33,6 +42,7 @@ def compose(request):
     # Check recipient emails
     data = json.loads(request.body)
     emails = [email.strip() for email in data.get("recipients").split(",")]
+
     if emails == [""]:
         return JsonResponse({
             "error": "At least one recipient required."
@@ -53,18 +63,42 @@ def compose(request):
     # Get contents of email
     subject = data.get("subject", "")
     body = data.get("body", "")
+    attachments = data.get("attachments", "")
 
     # Create one email for each recipient, plus sender
+    mbox_file_path = f'./inbox_{subject}.mbox' 
+    mbox = MailBox.mbox(mbox_file_path)
+    email = MailBox.mboxMessage()
+    email['From'] = request.user.email
+    email['To'] = ", ".join(emails)
+    email['Subject'] = subject
+    email['Attachments'] = attachments
+    email.set_payload(body)  
+    mbox.add(email)
+    mbox.flush()  # Save the mbox file
+
+    # call detect_spam function from machinelearning.py and delete mbox file
+    try:
+        test_data = MailBox.mbox(mbox_file_path)
+        spam = predict(test_data)
+    finally:
+        time.sleep(1) 
+        # send2trash.send2trash(mbox_file_path)
+        # os.remove(mbox_file_path)
+
     users = set()
     users.add(request.user)
     users.update(recipients)
+
     for user in users:
         email = Email(
             user=user,
             sender=request.user,
             subject=subject,
+            attachments=attachments,
             body=body,
-            read=user == request.user
+            read=user == request.user,
+            spam=spam
         )
         email.save()
         for recipient in recipients:
@@ -80,21 +114,44 @@ def mailbox(request, mailbox):
     if mailbox == "inbox":
         emails = Email.objects.filter(
             user=request.user, recipients=request.user, archived=False
-        )
+        )  
     elif mailbox == "sent":
         emails = Email.objects.filter(
             user=request.user, sender=request.user
         )
     elif mailbox == "archive":
         emails = Email.objects.filter(
-            user=request.user, recipients=request.user, archived=True
+            user=request.user, recipients=request.user, archived=True , spam=False
         )
+    elif mailbox == "spam":
+        emails = Email.objects.filter(
+            user=request.user, recipients=request.user, spam=True
+        )
+    elif mailbox == "analytics":
+        emails_spam = Email.objects.filter(
+            user=request.user, recipients=request.user, spam=True
+        )
+        emails = Email.objects.filter(
+            user=request.user, recipients=request.user
+        )
+
+        count_emails_spam = emails_spam.count()
+        count_emails = emails.count()
+
+        response_data = {
+        "count_emails_spam": count_emails_spam,
+        "count_emails": count_emails,
+        "emails": [email.serialize() for email in emails]
+        }
+
+        return JsonResponse(response_data, safe=False)
+    
     else:
         return JsonResponse({"error": "Invalid mailbox."}, status=400)
 
     # Return emails in reverse chronologial order
     emails = emails.order_by("-timestamp").all()
-    return JsonResponse([email.serialize() for email in emails], safe=False)
+    return JsonResponse([email.serialize() for email in emails], safe=False )
 
 
 @csrf_exempt
